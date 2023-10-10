@@ -144,10 +144,6 @@ body {
   color: var(--color-fg-default);
   font-size: 18px;
   line-height: 1.5;
-  min-height: 100vh;
-  display: grid;
-  min-height: 100vh;
-  grid-template-rows: auto 1fr auto;
   -webkit-font-smoothing: antialiased;
   font-family: "Inter", "Courier New", Courier, monospace;
 }
