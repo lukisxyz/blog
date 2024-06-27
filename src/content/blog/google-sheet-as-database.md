@@ -1,5 +1,5 @@
 ---
-title: 'Get Started Today: Building a Web App with Google Sheets as Your Database'
+title: 'Building a Web App with Google Sheets as Your Database'
 description: 'Using google sheet on my web application as database, how to do it?'
 pubDate: 'Jun 27 2024'
 heroImage: 'https://lh3.googleusercontent.com/AC_sTRq6oYXQFRkMdUy0c98PrlLxqV94rZIoMj2Osa1oG_s-b9wL1s29PA8Nkz90X0BEfV14n2iI-7EqFfHrBvW0ag1crQBeMSPojA=e365-pa-nu-rw-w738'
