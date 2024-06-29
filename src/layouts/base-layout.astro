@@ -15,32 +15,17 @@ const {
     description = SITE_DESCRIPTION,
     image = "/blog-placeholder-1.jpg",
 } = Astro.props;
+const theme = Astro.cookies.get("theme")?.value ?? "light";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class={theme}>
     <head>
         <!-- Global Metadata -->
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="generator" content={Astro.generator} />
-
-        <!-- Font preloads -->
-        <link
-            rel="preload"
-            href="/fonts/atkinson-regular.woff"
-            as="font"
-            type="font/woff"
-            crossorigin
-        />
-        <link
-            rel="preload"
-            href="/fonts/atkinson-bold.woff"
-            as="font"
-            type="font/woff"
-            crossorigin
-        />
 
         <!-- Canonical URL -->
         <link rel="canonical" href={canonicalURL} />
@@ -64,32 +49,125 @@ const {
         <meta property="twitter:description" content={description} />
         <meta property="twitter:image" content={new URL(image, Astro.url)} />
     </head>
-    <body>
-        <header class="w-full flex items-center justify-between">
-            <h2
-                class="flex-shrink-0 text-base font-semibold uppercase dark:text-white"
-            >
-                <a href="/">{SITE_TITLE}</a>
-            </h2>
-            <nav class="w-full flex items-center justify-end gap-6">
+    <body
+        class="text-[#212121] bg-[#f5f5f5] dark:bg-[#212121] dark:text-[#f5f5f5]"
+    >
+        <header
+            class="w-full flex items-center justify-between max-w-screen-md mx-auto p-6"
+        >
+            <nav class="w-full flex items-center justify-between gap-6">
                 <LinkHeader href="/">Home</LinkHeader>
                 <LinkHeader href="/about">About</LinkHeader>
                 <LinkHeader href="/blog">Blog</LinkHeader>
+                <div class="w-full"></div>
+                <button
+                    id="theme-toggle"
+                    type="button"
+                    title="Toggle dark mode"
+                    aria-label="Toggle dark mode"
+                    class="flex flex-shrink-0 justify-center items-center p-3 rounded-full text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-800"
+                >
+                    <svg
+                        data-svg=""
+                        class="flex-shrink-0 size-5 hidden"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2"></path>
+                        <path d="M12 20v2"></path>
+                        <path d="m4.93 4.93 1.41 1.41"></path>
+                        <path d="m17.66 17.66 1.41 1.41"></path>
+                        <path d="M2 12h2"></path>
+                        <path d="M20 12h2"></path>
+                        <path d="m6.34 17.66-1.41 1.41"></path>
+                        <path d="m19.07 4.93-1.41 1.41"></path>
+                    </svg>
+                    <svg
+                        data-svg=""
+                        class="flex-shrink-0 size-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                    </svg>
+                </button>
             </nav>
         </header>
-        <main>
+        <main class="max-w-screen-md mx-auto p-6">
             <slot />
         </main>
-        <footer class="text-center font-light text-sm mt-16">
+        <footer class="text-center font-light text-sm mt-12 mb-6">
             &copy; {today.getFullYear()} Fahmi. All rights reserved.
         </footer>
     </body>
+    <script>
+        type Themes = "dark" | "light";
+        const themeToggleBtn = document.getElementById("theme-toggle");
+        const svgIcons = themeToggleBtn?.querySelectorAll("svg");
+
+        themeToggleBtn?.addEventListener("click", () => {
+            document.documentElement.classList.toggle("dark");
+            const savedTheme = getCookie("theme");
+            if (savedTheme === "dark") {
+                saveTheme("light");
+            } else {
+                saveTheme("dark");
+            }
+            if (svgIcons) {
+                svgIcons.forEach((icon) => icon.classList.toggle("hidden"));
+            }
+        });
+
+        function saveTheme(theme: Themes) {
+            const d = new Date();
+            d.setTime(d.getTime() + 365 * 86400000);
+            document.cookie = `theme=${theme};expires=${d.toUTCString()}`;
+        }
+
+        function getCookie(cname: string) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(";");
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == " ") {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+    </script>
 </html>
 
 <style>
+    body * {
+        @apply transition-colors duration-300;
+    }
     header,
     main,
     footer {
-        @apply max-w-screen-md w-full mx-auto p-6;
+        @apply max-w-screen-md w-full mx-auto px-6 pt-6;
+    }
+
+    header a {
+        color: var(--fg-color);
     }
 </style>
