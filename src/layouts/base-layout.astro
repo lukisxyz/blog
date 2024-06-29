@@ -135,8 +135,8 @@ const theme = Astro.cookies.get("theme")?.value ?? "light";
 
         function saveTheme(theme: Themes) {
             const d = new Date();
-            d.setTime(d.getTime() + 365 * 86400000);
-            document.cookie = `theme=${theme};expires=${d.toUTCString()}`;
+            d.setTime(d.getTime() + 365 * 86400000); // Expires in a year
+            document.cookie = `theme=${theme};expires=${d.toUTCString()};path=/`; // Add path=/
         }
 
         function getCookie(cname: string) {
